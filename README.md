@@ -1,12 +1,25 @@
 # Reddit Marketing Operations & MOPs Monitor (Python)
 
-**Read-only Python proof of concept** for reviewing approved Reddit discussions about:
+**Read-only Python proof of concept** for reviewing approved Reddit discussions. It categorizes posts into **14 topic areas** (five original areas and nine newly added areas):
 
-- **MOPs / Marketing Operations**: `MOPs`, `marketing operations`, `marketing ops`, `marketing operation`, `marketingops`
-- **Marketo**: `Marketo`, `Adobe Marketo Engage`
-- **Marketing Automation**: `marketing automation`, `lead scoring`, `lead nurturing`, `nurture campaign`
-- **RevOps**: `RevOps`, `revenue operations`, `revenue ops`
-- **AI in Marketing**: `AI agents`, `agentic AI`, `AI in marketing`, `marketing AI`, `LLM`
+| Topic | Examples of matching keywords or phrases |
+| --- | --- |
+| **MOPs / Marketing Operations** | MOPs, marketing operations, marketing ops, marketingops |
+| **Marketo** | Marketo, Adobe Marketo Engage |
+| **Marketing Automation** | Marketing automation, lead scoring, lead nurturing |
+| **RevOps** | RevOps, revenue operations, revenue ops |
+| **AI in Marketing** | AI agents, agentic AI, AI in marketing, LLM |
+| **Marketo Migration** | Marketo migration, migrating from/to Marketo, Marketo workspace consolidation |
+| **Preference Center** | Preference center/centre, subscription management, communication preferences |
+| **GDPR Discussions** | GDPR, data subject access request, DSAR, lawful basis |
+| **Marketing Strategy** | Marketing strategy, GTM strategy, campaign strategy, ABM strategy |
+| **AI Services** | AI services, AI consulting, AI as a service, LLM consulting |
+| **Martech Solutions** | Martech solutions, martech stack, marketing technology platforms |
+| **Inboxing** | Inbox placement, email deliverability, sender reputation, SPF, DKIM, DMARC |
+| **AI-Driven Automation & Personalization** | AI-driven automation, AI-powered personalization, predictive personalization |
+| **Platform Implementation & Integration** | Marketo integration, HubSpot setup, Marketing Cloud Next, platform implementation |
+
+Matching uses case-insensitive regular expressions. **A post may match more than one topic.** The platform implementation topic focuses on technical setup/integration for Marketo and HubSpot; the distinctive term Marketing Cloud Next is also tracked on its own. This is rule-based keyword matching, not semantic understanding, so review false positives and adjust phrases as needed.
 
 The bot finds matching posts, prints their titles, topic labels, and URLs, and uses an automatically expiring SQLite table of post IDs to avoid reporting the same match repeatedly. **It does not post, comment, send messages, or vote.**
 
@@ -51,7 +64,7 @@ This repository is prepared for a Reddit Data API access request. Do not use it 
 
 ## How it works
 
-- `topics.py` contains case-insensitive regex keywords, including **MOPs** and **Marketing Operations**.
+- `topics.py` contains case-insensitive regex keywords, covering all **14 research categories**, including **MOPs**, **Marketing Operations**, migrations, GDPR, and integrations.
 - `reddit_monitor.py` loops through the configured communities, reads recent posts with PRAW, and tags any keyword matches.
 - The local `seen_posts.db` stores only post IDs, timestamps, and category labels for deduplication, with a 48-hour automatic expiration.
 - The source text stays in memory only; no usernames, bodies, or full post URLs are saved to disk by the script. Console output can contain post titles, so handle terminal logs accordingly.
@@ -71,6 +84,10 @@ reddit-marketingops-monitor/
 │   └── test_topics.py      # Offline keyword tests
 └── README.md               # This document
 ```
+
+## Current monitoring coverage
+
+The application checks the subreddits listed in the local `.env` setting `SUBREDDITS` (see `.env.example`). Topic labels are **keywords searched within the fetched posts**, not additional subreddits or Reddit-wide search queries. To cover more communities, explicitly add only communities within your approved Reddit API scope.
 
 ## How to add more topics
 

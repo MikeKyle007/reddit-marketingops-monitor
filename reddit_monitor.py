@@ -15,7 +15,7 @@ import praw
 from dotenv import load_dotenv
 from prawcore.exceptions import PrawcoreException
 
-from topics import categorize
+from topics import TOPIC_PATTERNS, categorize
 
 load_dotenv(Path(__file__).with_name(".env"))
 
@@ -77,7 +77,7 @@ def scan() -> None:
     reddit = reddit_client()
     limit = post_limit()
     print("Read-only mode:", reddit.read_only)
-    print("Topics include: MOPs, Marketing Operations, Marketing Ops, Marketo, RevOps, AI")
+    print(f"Monitoring {len(TOPIC_PATTERNS)} topic categories")
 
     total_checked = 0
     new_matches = 0
